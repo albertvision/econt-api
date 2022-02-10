@@ -113,6 +113,80 @@ paths:
                                             $ref: '#/components/schemas/Office'
                 default:
                     $ref: '#/components/responses/default'
+                    
+    /Nomenclatures/NomenclaturesService.getStreets.json:
+        post:
+            description: Requests all streets. If `cityID` provided, returns all streets in it.
+            security: [{}]
+            tags:
+                - Nomenclatures
+            requestBody:
+                content: 
+                    'application/json': 
+                        schema: 
+                            type: object
+                            properties:
+                                cityID:
+                                    type: integer
+                        examples:
+                            bulgaria:
+                                summary: Get all streets in Svilengrad
+                                value: 
+                                    cityID: 72
+                            all:
+                                summary: Get all street
+                                value: '{}'
+            responses:
+                '200':
+                    description: 'Success'
+                    content:
+                        application/json:
+                            schema: 
+                                type: object
+                                properties:
+                                    streets:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Street'
+                default:
+                    $ref: '#/components/responses/default'
+                    
+    /Nomenclatures/NomenclaturesService.getQuarters.json:
+        post:
+            description: Get all neighourhoods (regions) in a city. If `cityID` provided, returns all neighourhoods (regions) in it.
+            security: [{}]
+            tags:
+                - Nomenclatures
+            requestBody:
+                content: 
+                    'application/json': 
+                        schema: 
+                            type: object
+                            properties:
+                                cityID:
+                                    type: integer
+                        examples:
+                            bulgaria:
+                                summary: Get all quarters in Svilengrad
+                                value: 
+                                    cityID: 72
+                            all:
+                                summary: Get all quarters
+                                value: '{}'
+            responses:
+                '200':
+                    description: 'Success'
+                    content:
+                        application/json:
+                            schema: 
+                                type: object
+                                properties:
+                                    streets:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Quarter'
+                default:
+                    $ref: '#/components/responses/default'
 
 
 components:
@@ -214,6 +288,22 @@ components:
             expressCityDeliveries:
                 type: boolean
                 description: Indicates if express city deliveries are available
+
+    Quarter:
+        type: object
+        description: Neighbourhood (region) in a city
+        properties:
+            id:
+                type: integer
+            cityID:
+                type: integer
+                description: ID of the city
+            name:
+                type: string
+                description: Name in Bulgarian
+            nameEn:
+                type: string
+                description: Name in English
     
     Office:
         type: object
@@ -305,6 +395,23 @@ components:
         externalDocs: 
             url: https://ee.econt.com/services/Shipments/#ShipmentType
             description: See Definitions
+
+    Street:
+        type: object
+        description: Street in a city
+        properties:
+            id:
+                type: integer
+            cityID:
+                type: integer
+                description: ID of the city
+            name:
+                type: string
+                description: Street name in Bulgarian
+            nameEn:
+                type: string
+                description: Street name in English
+        
     GeoLocation:
         type: object
         properties:

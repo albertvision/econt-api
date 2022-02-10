@@ -13,8 +13,7 @@ servers:
 paths:
     /Nomenclatures/NomenclaturesService.getCountries.json:
         post:
-            summary: 'All countries where Econt Express operates'
-            operationId: getCountries
+            description: 'All countries where Econt Express operates'
             security:
                 - {}
             tags:
@@ -36,8 +35,7 @@ paths:
 
     /Nomenclatures/NomenclaturesService.getCities.json:
         post:
-            summary: Method for requesting the cities in a country
-            operationId: getCities
+            description: Method for requesting the cities in a country
             security: [{}]
             tags:
                 - Nomenclatures
@@ -74,8 +72,7 @@ paths:
                     $ref: '#/components/responses/default'
     /Nomenclatures/NomenclaturesService.getOffices.json:
         post:
-            summary: All offices of Econt Express in a country
-            operationId: getOffices
+            description: All offices of Econt Express in a country
             security: [{}]
             tags:
                 - Nomenclatures

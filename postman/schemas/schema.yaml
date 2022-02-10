@@ -187,6 +187,68 @@ paths:
                                             $ref: '#/components/schemas/Quarter'
                 default:
                     $ref: '#/components/responses/default'
+                    
+    /Nomenclatures/AddressService.validateAddress.json:
+        post:
+            description: |
+                Validates an address based on input parameters.
+
+                Minimum required parameters of `address`: `city` and one of:
+                    1. street name and street number; 
+                    2. or quarter and other 
+            security: [{}]
+            tags:
+                - Nomenclatures
+            requestBody:
+                content: 
+                    'application/json': 
+                        schema: 
+                            type: object
+                            properties:
+                                address:
+                                    $ref: '#/components/schemas/Address'
+                        examples:
+                            validStreet:
+                                summary: Valid street
+                                value: 
+                                    address:
+                                        city: 
+                                            country: 
+                                                code2: BG
+                                            name: София
+                                        street: Никола Тесла
+                                        num: 5
+                            validQuarter:
+                                summary: Valid region
+                                value: 
+                                    address:
+                                        city: 
+                                            country: 
+                                                code2: BG
+                                            name: София
+                                        quarter: Младост 4
+                                        num: 488
+
+            responses:
+                '200':
+                    description: 'Success'
+                    content:
+                        application/json:
+                            schema: 
+                                type: object
+                                properties:
+                                    address:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Address'
+                                    validationStatus:
+                                        type: string
+                                        enum:
+                                            - normal
+                                            - processed
+                                            - invalid
+                default:
+                    $ref: '#/components/responses/default'
 
 
 components:
@@ -381,6 +443,7 @@ components:
                 description: International name of the distribution center associated with the office
 
     ShipmentType:
+        type: string
         enum:
             - document
             - pack
@@ -422,6 +485,7 @@ components:
                 type: number
                 description: Geographic coordinate that specifies the east-west position of a point on the Earth's surface
             confidence:
+                type: integer
                 enum: 
                     - 1
                     - 2
@@ -456,3 +520,7 @@ components:
       scheme: basic
 security:
     - BasicAuth: []
+tags:
+    - name: Nomenclatures
+      description: Anything that is related to names is likely to be here. That includes countries, cities, offices, streets, addresses, neighbourhoods.
+      

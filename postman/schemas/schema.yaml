@@ -58,6 +58,7 @@ paths:
                                     countryCode: 'BGR'
                             all:
                                 summary: Get all cities
+                                value: '{}'
             responses:
                 '200':
                     description: 'Success'

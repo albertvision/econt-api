@@ -1,0 +1,189 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'Econt XML/JSON API'
+externalDocs:
+    url: https://ee.econt.com/services
+    description: Official documentation
+servers:
+    - url: 'https://demo.econt.com/ee/services'
+      description: "Demo"
+    - url: 'https://ee.econt.com/services'
+      description: "Production"
+paths:
+    /Nomenclatures/NomenclaturesService.getCountries.json:
+        get:
+            summary: 'All countries where Econt Express operates'
+            operationId: getCountries
+            security:
+                - {}
+            tags:
+                - Nomenclatures
+            responses:
+                '200':
+                    description: 'List of countries'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    countries:
+                                        type: array
+                                        items: 
+                                            $ref: '#/components/schemas/Country'
+                default:
+                    $ref: '#/components/responses/default'
+
+    /Nomenclatures/NomenclaturesService.getCities.json:
+        get:
+            summary: Method for requesting the cities in a country
+            operationId: getCities
+            security: [{}]
+            tags:
+                - Nomenclatures
+            requestBody:
+                description: Three-letter ISO Alpha-3 code of the country
+                content: 
+                    'application/json': 
+                        schema: 
+                            type: object
+                            properties:
+                                countryCode: 
+                                    type: string
+                                    pattern: '^[A-Z]{3}$'
+                        examples:
+                            bg: 
+                                summary: Get all cities in Bulgaria
+                                value:
+                                    countryCode: 'BGR'
+                            all:
+                                summary: Get all cities
+            responses:
+                '200':
+                    description: 'Success'
+                    content:
+                        application/json:
+                            schema: 
+                                type: object
+                                properties:
+                                    cities:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/City'
+                default:
+                    $ref: '#/components/responses/default'
+                                
+
+
+components:
+  responses:
+    default:
+        description: Unexpected error
+        content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/Error'
+  schemas:
+    Country:
+      type: object
+      anyOf:
+        - required: [id]
+        - required: 
+            - code2
+            - code3
+      properties:
+        id:
+          type: integer
+        code2:
+            type: string
+            title: Country code in ISO 3166-1 alpha-2
+            pattern: "^[A-Z]{2}$"
+        code3:
+            type: string
+            title: Country code in ISO 3166-1 alpha-3
+            pattern: "^[A-Z]{3}$"
+        name:
+          type: string
+          description: Name in Bulgarian
+        nameEn:
+          type: string
+          description: Name in English
+        isEu:
+          type: boolean
+          title: Is the country a member of the EU
+      readOnly: true
+
+    City:
+        type: object
+        description: City served by Econt Express
+        properties:
+            id: 
+                type: integer
+            country:
+                $ref: '#/components/schemas/Country'
+            postCode: 
+                type: string
+            name:
+                type: string
+                description: Name in Bulgarian
+            nameEn:
+                type: string
+                description: Name in English
+            regionName:
+                type: string
+                description: Region in Bulgarian
+            regionNameEn:
+                type: string
+                description: Region in English
+            phoneCode:
+                type: string
+                description: Phone prefix for the city
+            location:
+                $ref: '#/components/schemas/GeoLocation'
+            expressCityDeliveries:
+                type: boolean
+                description: Indicates if express city deliveries are available
+    GeoLocation:
+        type: object
+        properties:
+            latitude:
+                type: number
+                description: Geographic coordinate that specifies the north–south position of a point on the Earth's surface
+            longitude:
+                type: number
+                description: Geographic coordinate that specifies the east-west position of a point on the Earth's surface
+            confidence:
+                enum: 
+                    - 1
+                    - 2
+                    - 3
+                description: The expected accuracy of the location. 0-none, there are either no coordinates or the coordinates do not represent the location; 1-low; 2-medium; 3-high.
+
+    Error:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The type of error - usually the exception class name
+        message:
+          type: string
+          description: The error message in user language
+        fields:
+            type: array
+            description: "The fields which caused the error"
+            items:
+                type: string
+        innerErrors:
+            type: array
+            description: "The causes of the error"
+            items:
+                $ref: '#/components/schemas/Error'
+
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+    - BasicAuth: []

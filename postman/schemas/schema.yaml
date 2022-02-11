@@ -19,6 +19,12 @@ paths:
         - { }
       tags:
         - Nomenclatures
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              example: '{}'
       responses:
         '200':
           description: 'List of countries'
@@ -322,6 +328,9 @@ components:
     Office:
       type: object
       description: Office of Econt Express. Required fields for identifying an office - code or ID
+      anyOf:
+        - required: [id]
+        - required: [code]
       properties:
         id:
           type: integer

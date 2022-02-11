@@ -3,312 +3,264 @@ info:
   version: '1.0.0'
   title: 'Econt XML/JSON API'
 externalDocs:
-    url: https://ee.econt.com/services
-    description: Official documentation
+  url: https://ee.econt.com/services
+  description: Official documentation
 servers:
-    - url: 'https://demo.econt.com/ee/services'
-      description: "Demo"
-    - url: 'https://ee.econt.com/services'
-      description: "Production"
+  - url: 'https://demo.econt.com/ee/services'
+    description: "Demo"
+  - url: 'https://ee.econt.com/services'
+    description: "Production"
 paths:
-    /Nomenclatures/NomenclaturesService.getCountries.json:
-        post:
-            description: 'All countries where Econt Express operates'
-            security:
-                - {}
-            tags:
-                - Nomenclatures
-            responses:
-                '200':
-                    description: 'List of countries'
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    countries:
-                                        type: array
-                                        items: 
-                                            $ref: '#/components/schemas/Country'
-                default:
-                    $ref: '#/components/responses/default'
+  /Nomenclatures/NomenclaturesService.getCountries.json:
+    post:
+      operationId: getCountries
+      description: 'All countries where Econt Express operates'
+      security:
+        - { }
+      tags:
+        - Nomenclatures
+      responses:
+        '200':
+          description: 'List of countries'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCountriesResponse'
+        default:
+          $ref: '#/components/responses/default'
 
-    /Nomenclatures/NomenclaturesService.getCities.json:
-        post:
-            description: Method for requesting the cities in a country
-            security: [{}]
-            tags:
-                - Nomenclatures
-            requestBody:
-                content: 
-                    'application/json': 
-                        schema: 
-                            type: object
-                            properties:
-                                countryCode: 
-                                    type: string
-                                    pattern: '^[A-Z]{3}$'
-                        examples:
-                            bg: 
-                                summary: Get all cities in Bulgaria
-                                value:
-                                    countryCode: 'BGR'
-                            all:
-                                summary: Get all cities
-                                value: '{}'
-            responses:
-                '200':
-                    description: 'Success'
-                    content:
-                        application/json:
-                            schema: 
-                                type: object
-                                properties:
-                                    cities:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/City'
-                default:
-                    $ref: '#/components/responses/default'
-    /Nomenclatures/NomenclaturesService.getOffices.json:
-        post:
-            description: All offices of Econt Express in a country
-            security: [{}]
-            tags:
-                - Nomenclatures
-            requestBody:
-                content: 
-                    'application/json': 
-                        schema: 
-                            type: object
-                            properties:
-                                countryCode: 
-                                    type: string
-                                    pattern: '^[A-Z]{3}$'
-                                cityID:
-                                    type: integer
-                        examples:
-                            bulgaria:
-                                summary: Get all offices in Bulgaria
-                                value: 
-                                    countryCode: BGR
-                            svilengrad: 
-                                summary: Get all offices in Svilengrad
-                                value:
-                                    cityID: 72
-                            all:
-                                summary: Get all offices
-                                value: '{}'
-            responses:
-                '200':
-                    description: 'Success'
-                    content:
-                        application/json:
-                            schema: 
-                                type: object
-                                properties:
-                                    cities:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/Office'
-                default:
-                    $ref: '#/components/responses/default'
-                    
-    /Nomenclatures/NomenclaturesService.getStreets.json:
-        post:
-            description: Requests all streets. If `cityID` provided, returns all streets in it.
-            security: [{}]
-            tags:
-                - Nomenclatures
-            requestBody:
-                content: 
-                    'application/json': 
-                        schema: 
-                            type: object
-                            properties:
-                                cityID:
-                                    type: integer
-                        examples:
-                            bulgaria:
-                                summary: Get all streets in Svilengrad
-                                value: 
-                                    cityID: 72
-                            all:
-                                summary: Get all street
-                                value: '{}'
-            responses:
-                '200':
-                    description: 'Success'
-                    content:
-                        application/json:
-                            schema: 
-                                type: object
-                                properties:
-                                    streets:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/Street'
-                default:
-                    $ref: '#/components/responses/default'
-                    
-    /Nomenclatures/NomenclaturesService.getQuarters.json:
-        post:
-            description: Get all neighourhoods (regions) in a city. If `cityID` provided, returns all neighourhoods (regions) in it.
-            security: [{}]
-            tags:
-                - Nomenclatures
-            requestBody:
-                content: 
-                    'application/json': 
-                        schema: 
-                            type: object
-                            properties:
-                                cityID:
-                                    type: integer
-                        examples:
-                            bulgaria:
-                                summary: Get all quarters in Svilengrad
-                                value: 
-                                    cityID: 72
-                            all:
-                                summary: Get all quarters
-                                value: '{}'
-            responses:
-                '200':
-                    description: 'Success'
-                    content:
-                        application/json:
-                            schema: 
-                                type: object
-                                properties:
-                                    streets:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/Quarter'
-                default:
-                    $ref: '#/components/responses/default'
-                    
-    /Nomenclatures/AddressService.validateAddress.json:
-        post:
-            description: |
-                Validates an address based on input parameters.
+  /Nomenclatures/NomenclaturesService.getCities.json:
+    post:
+      operationId: getCities
+      description: Method for requesting the cities in a country
+      security: [ { } ]
+      tags:
+        - Nomenclatures
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/GetCitiesRequest'
+            examples:
+              bg:
+                summary: Get all cities in Bulgaria
+                value:
+                  countryCode: 'BGR'
+            example:
+              countryCode: 'BGR'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCitiesResponse'
 
-                Minimum required parameters of `address`: `city` and one of:
-                    1. street name and street number; 
-                    2. or quarter and other 
-            security: [{}]
-            tags:
-                - Nomenclatures
-            requestBody:
-                content: 
-                    'application/json': 
-                        schema: 
-                            type: object
-                            properties:
-                                address:
-                                    $ref: '#/components/schemas/Address'
-                        examples:
-                            validStreet:
-                                summary: Valid street
-                                value: 
-                                    address:
-                                        city: 
-                                            country: 
-                                                code2: BG
-                                            name: София
-                                        street: Никола Тесла
-                                        num: 5
-                            validQuarter:
-                                summary: Valid region
-                                value: 
-                                    address:
-                                        city: 
-                                            country: 
-                                                code2: BG
-                                            name: София
-                                        quarter: Младост 4
-                                        num: 488
+        default:
+          $ref: '#/components/responses/default'
+  /Nomenclatures/NomenclaturesService.getOffices.json:
+    post:
+      operationId: getOffices
+      description: All offices of Econt Express in a country
+      security: [ { } ]
+      tags:
+        - Nomenclatures
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/GetOfficesRequest'
+            examples:
+              bulgaria:
+                summary: Get all offices in Bulgaria
+                value:
+                  countryCode: BGR
+              svilengrad:
+                summary: Get all offices in Svilengrad
+                value:
+                  cityID: 72
+              all:
+                summary: Get all offices
+                value: '{}'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOfficesResponse'
+        default:
+          $ref: '#/components/responses/default'
 
-            responses:
-                '200':
-                    description: 'Success'
-                    content:
-                        application/json:
-                            schema: 
-                                type: object
-                                properties:
-                                    address:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/Address'
-                                    validationStatus:
-                                        type: string
-                                        enum:
-                                            - normal
-                                            - processed
-                                            - invalid
-                default:
-                    $ref: '#/components/responses/default'
+  /Nomenclatures/NomenclaturesService.getStreets.json:
+    post:
+      operationId: getStreets
+      description: Requests all streets. If `cityID` provided, returns all streets in it.
+      security: [ { } ]
+      tags:
+        - Nomenclatures
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/GetStreetRequest'
+            examples:
+              bulgaria:
+                summary: Get all streets in Svilengrad
+                value:
+                  cityID: 72
+              all:
+                summary: Get all street
+                value: '{}'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStreetResponse'
+        default:
+          $ref: '#/components/responses/default'
+
+  /Nomenclatures/NomenclaturesService.getQuarters.json:
+    post:
+      operationId: getQuarters
+      description: Get all neighourhoods (regions) in a city. If `cityID` provided, returns all neighourhoods (regions) in it.
+      security: [ { } ]
+      tags:
+        - Nomenclatures
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/GetQuartersRequest'
+            examples:
+              bulgaria:
+                summary: Get all quarters in Svilengrad
+                value:
+                  cityID: 72
+              all:
+                summary: Get all quarters
+                value: '{}'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetQuartersResponse'
+        default:
+          $ref: '#/components/responses/default'
+
+  /Nomenclatures/AddressService.validateAddress.json:
+    post:
+      operationId: validateAddress
+      description: |
+        Validates an address based on input parameters.
+
+        Minimum required parameters of `address`: `city` and one of:
+            1. street name and street number;
+            2. or quarter and other
+      security: [ { } ]
+      tags:
+        - Nomenclatures
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ValidateAddressRequest'
+            examples:
+              validStreet:
+                summary: Valid street
+                value:
+                  address:
+                    city:
+                      country:
+                        code2: BG
+                      name: София
+                    street: Никола Тесла
+                    num: 5
+              validQuarter:
+                summary: Valid region
+                value:
+                  address:
+                    city:
+                      country:
+                        code2: BG
+                      name: София
+                    quarter: Младост 4
+                    num: 488
+
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateAddressResponse'
+        default:
+          $ref: '#/components/responses/default'
 
 
 components:
   responses:
     default:
-        description: Unexpected error
-        content:
-            application/json:
-                schema:
-                    $ref: '#/components/schemas/Error'
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
   schemas:
     Address:
-        type: object
-        description: Address. Required fields for valid address - city, street and street number (or quarter and other). Use respective fields or all joined together in the field <fullAddress>
-        properties:
-            id:
-                type: integer
-            city:
-                $ref: '#/components/schemas/City'
-                description: 'The city where the address is located'
-            fullAddress:
-                type: string
-                description: The whole address
-            quarter:
-                type: string
-                description: Neighbourhood (region) name
-            street:
-                type: string
-                description: Street name
-            num:
-                type: string
-                description: Street number
-            other: 
-                type: string
-                description: Block number, entrance number, floor, apartment number and other additional information
-            location:
-                $ref: '#/components/schemas/GeoLocation'
-                description: Geo coordinates
-            zip:
-                type: string
-                description: Zip (postal) code
-    
+      type: object
+      description: Address. Required fields for valid address - city, street and street number (or quarter and other). Use respective fields or all joined together in the field <fullAddress>
+      properties:
+        id:
+          type: integer
+        city:
+          $ref: '#/components/schemas/City'
+          description: 'The city where the address is located'
+        fullAddress:
+          type: string
+          description: The whole address
+        quarter:
+          type: string
+          description: Neighbourhood (region) name
+        street:
+          type: string
+          description: Street name
+        num:
+          type: string
+          description: Street number
+        other:
+          type: string
+          description: Block number, entrance number, floor, apartment number and other additional information
+        location:
+          $ref: '#/components/schemas/GeoLocation'
+          description: Geo coordinates
+        zip:
+          type: string
+          description: Zip (postal) code
+
     Country:
       type: object
       anyOf:
-        - required: [id]
-        - required: 
+        - required: [ id ]
+        - required:
             - code2
             - code3
       properties:
         id:
           type: integer
         code2:
-            type: string
-            title: Country code in ISO 3166-1 alpha-2
-            pattern: "^[A-Z]{2}$"
+          type: string
+          title: Country code in ISO 3166-1 alpha-2
+          pattern: "^[A-Z]{2}$"
         code3:
-            type: string
-            title: Country code in ISO 3166-1 alpha-3
-            pattern: "^[A-Z]{3}$"
+          type: string
+          title: Country code in ISO 3166-1 alpha-3
+          pattern: "^[A-Z]{3}$"
         name:
           type: string
           description: Name in Bulgarian
@@ -321,176 +273,176 @@ components:
       readOnly: true
 
     City:
-        type: object
-        description: City served by Econt Express
-        properties:
-            id: 
-                type: integer
-            country:
-                $ref: '#/components/schemas/Country'
-            postCode: 
-                type: string
-            name:
-                type: string
-                description: Name in Bulgarian
-            nameEn:
-                type: string
-                description: Name in English
-            regionName:
-                type: string
-                description: Region in Bulgarian
-            regionNameEn:
-                type: string
-                description: Region in English
-            phoneCode:
-                type: string
-                description: Phone prefix for the city
-            location:
-                $ref: '#/components/schemas/GeoLocation'
-            expressCityDeliveries:
-                type: boolean
-                description: Indicates if express city deliveries are available
+      type: object
+      description: City served by Econt Express
+      properties:
+        id:
+          type: integer
+        country:
+          $ref: '#/components/schemas/Country'
+        postCode:
+          type: string
+        name:
+          type: string
+          description: Name in Bulgarian
+        nameEn:
+          type: string
+          description: Name in English
+        regionName:
+          type: string
+          description: Region in Bulgarian
+        regionNameEn:
+          type: string
+          description: Region in English
+        phoneCode:
+          type: string
+          description: Phone prefix for the city
+        location:
+          $ref: '#/components/schemas/GeoLocation'
+        expressCityDeliveries:
+          type: boolean
+          description: Indicates if express city deliveries are available
 
     Quarter:
-        type: object
-        description: Neighbourhood (region) in a city
-        properties:
-            id:
-                type: integer
-            cityID:
-                type: integer
-                description: ID of the city
-            name:
-                type: string
-                description: Name in Bulgarian
-            nameEn:
-                type: string
-                description: Name in English
-    
+      type: object
+      description: Neighbourhood (region) in a city
+      properties:
+        id:
+          type: integer
+        cityID:
+          type: integer
+          description: ID of the city
+        name:
+          type: string
+          description: Name in Bulgarian
+        nameEn:
+          type: string
+          description: Name in English
+
     Office:
-        type: object
-        description: Office of Econt Express. Required fields for identifying an office - code or ID
-        properties:
-            id: 
-                type: integer
-            code:
-                type: string
-                description: A code identifying the office
-            isMPS:
-                type: boolean
-                description: True if the office is a mobile post station
-            isAPS:
-                type: boolean
-                description: True if the office is an automatic post station
-            name:
-                type: string
-                description: Name in Bulgarian
-            nameEn:
-                type: string
-                description: Name in English
-            phones:
-                type: array
-                description: A list of phone numbers for the office
-                items:
-                    type: string
-            emails:
-                type: array
-                description: A list of email addresses for the office
-                items:
-                    type: string
-            address: 
-                $ref: '#/components/schemas/Address'
-            info:
-                type: string
-                description: Additional information
-            currency: 
-                type: string
-                description: The currency the office works with
-            language:
-                type: string
-                description: The language the office works with
-            normalBusinessHoursFrom:
-                type: string
-                format: time
-                description: Business hours for parcel pickup and delivery from/to an address on weekdays
-            normalBusinessHoursTo:
-                type: string
-                format: time
-                description: Business hours for parcel pickup and delivery from/to an address on weekdays
-            halfDayBusinessHoursFrom:
-                type: string
-                format: time
-                description: Business hours for parcel pickup and delivery from/to an address on saturdays
-            halfDayBusinessHoursTo:
-                type: string
-                format: time
-                description: Business hours for parcel pickup and delivery from/to an address on saturdays
-            shipmentTypes:
-                type: array
-                description: Types of shipments which can be sent/collected to/from the office
-                items:
-                    $ref: '#/components/schemas/ShipmentType'
-            partnerCode: 
-                type: string
-            hubCode: 
-                type: string
-                description: Code of the distribution center associated with the office
-            hubName: 
-                type: string
-                description: Name of the distribution center associated with the office
-            hubNameEn: 
-                type: string
-                description: International name of the distribution center associated with the office
+      type: object
+      description: Office of Econt Express. Required fields for identifying an office - code or ID
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+          description: A code identifying the office
+        isMPS:
+          type: boolean
+          description: True if the office is a mobile post station
+        isAPS:
+          type: boolean
+          description: True if the office is an automatic post station
+        name:
+          type: string
+          description: Name in Bulgarian
+        nameEn:
+          type: string
+          description: Name in English
+        phones:
+          type: array
+          description: A list of phone numbers for the office
+          items:
+            type: string
+        emails:
+          type: array
+          description: A list of email addresses for the office
+          items:
+            type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        info:
+          type: string
+          description: Additional information
+        currency:
+          type: string
+          description: The currency the office works with
+        language:
+          type: string
+          description: The language the office works with
+        normalBusinessHoursFrom:
+          type: string
+          format: time
+          description: Business hours for parcel pickup and delivery from/to an address on weekdays
+        normalBusinessHoursTo:
+          type: string
+          format: time
+          description: Business hours for parcel pickup and delivery from/to an address on weekdays
+        halfDayBusinessHoursFrom:
+          type: string
+          format: time
+          description: Business hours for parcel pickup and delivery from/to an address on saturdays
+        halfDayBusinessHoursTo:
+          type: string
+          format: time
+          description: Business hours for parcel pickup and delivery from/to an address on saturdays
+        shipmentTypes:
+          type: array
+          description: Types of shipments which can be sent/collected to/from the office
+          items:
+            $ref: '#/components/schemas/ShipmentType'
+        partnerCode:
+          type: string
+        hubCode:
+          type: string
+          description: Code of the distribution center associated with the office
+        hubName:
+          type: string
+          description: Name of the distribution center associated with the office
+        hubNameEn:
+          type: string
+          description: International name of the distribution center associated with the office
 
     ShipmentType:
-        type: string
-        enum:
-            - document
-            - pack
-            - post_pack
-            - pallet
-            - cargo
-            - documentpallet
-            - big_letter
-            - small_letter
-            - money_transfer
-            - pp
-        externalDocs: 
-            url: https://ee.econt.com/services/Shipments/#ShipmentType
-            description: See Definitions
+      type: string
+      enum:
+        - document
+        - pack
+        - post_pack
+        - pallet
+        - cargo
+        - documentpallet
+        - big_letter
+        - small_letter
+        - money_transfer
+        - pp
+      externalDocs:
+        url: https://ee.econt.com/services/Shipments/#ShipmentType
+        description: See Definitions
 
     Street:
-        type: object
-        description: Street in a city
-        properties:
-            id:
-                type: integer
-            cityID:
-                type: integer
-                description: ID of the city
-            name:
-                type: string
-                description: Street name in Bulgarian
-            nameEn:
-                type: string
-                description: Street name in English
-        
+      type: object
+      description: Street in a city
+      properties:
+        id:
+          type: integer
+        cityID:
+          type: integer
+          description: ID of the city
+        name:
+          type: string
+          description: Street name in Bulgarian
+        nameEn:
+          type: string
+          description: Street name in English
+
     GeoLocation:
-        type: object
-        properties:
-            latitude:
-                type: number
-                description: Geographic coordinate that specifies the north–south position of a point on the Earth's surface
-            longitude:
-                type: number
-                description: Geographic coordinate that specifies the east-west position of a point on the Earth's surface
-            confidence:
-                type: integer
-                enum: 
-                    - 1
-                    - 2
-                    - 3
-                description: The expected accuracy of the location. 0-none, there are either no coordinates or the coordinates do not represent the location; 1-low; 2-medium; 3-high.
+      type: object
+      properties:
+        latitude:
+          type: number
+          description: Geographic coordinate that specifies the north–south position of a point on the Earth's surface
+        longitude:
+          type: number
+          description: Geographic coordinate that specifies the east-west position of a point on the Earth's surface
+        confidence:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+          description: The expected accuracy of the location. 0-none, there are either no coordinates or the coordinates do not represent the location; 1-low; 2-medium; 3-high.
 
     Error:
       type: object
@@ -504,23 +456,106 @@ components:
           type: string
           description: The error message in user language
         fields:
-            type: array
-            description: "The fields which caused the error"
-            items:
-                type: string
+          type: array
+          description: "The fields which caused the error"
+          items:
+            type: string
         innerErrors:
-            type: array
-            description: "The causes of the error"
-            items:
-                $ref: '#/components/schemas/Error'
+          type: array
+          description: "The causes of the error"
+          items:
+            $ref: '#/components/schemas/Error'
 
+    GetCountriesResponse:
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Country'
+    GetCitiesRequest:
+      type: object
+      properties:
+        countryCode:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          description: Country code in 3 nums
+
+    GetCitiesResponse:
+      type: object
+      properties:
+        cities:
+          type: array
+          items:
+            $ref: '#/components/schemas/City'
+
+    GetOfficeRequest:
+      type: object
+      properties:
+        countryCode:
+          type: string
+          pattern: '^[A-Z]{3}$'
+        cityID:
+          type: integer
+    GetOfficesResponse:
+      type: object
+      properties:
+        cities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Office'
+
+    GetStreetRequest:
+      type: object
+      properties:
+        cityID:
+          type: integer
+    GetStreetResponse:
+      type: object
+      properties:
+        streets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Street'
+
+    GetQuartersRequest:
+      type: object
+      properties:
+        cityID:
+          type: integer
+    GetQuartersResponse:
+      type: object
+      properties:
+        streets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quarter'
+
+    ValidateAddressRequest:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+    ValidateAddressResponse:
+      type: object
+      properties:
+        address:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        validationStatus:
+          type: string
+          enum:
+            - normal
+            - processed
+            - invalid
   securitySchemes:
     BasicAuth:
       type: http
       scheme: basic
 security:
-    - BasicAuth: []
+  - BasicAuth: [ ]
 tags:
-    - name: Nomenclatures
-      description: Anything that is related to names is likely to be here. That includes countries, cities, offices, streets, addresses, neighbourhoods.
+  - name: Nomenclatures
+    description: Anything that is related to names is likely to be here. That includes countries, cities, offices, streets, addresses, neighbourhoods.
       

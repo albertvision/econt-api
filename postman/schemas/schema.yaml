@@ -16,7 +16,7 @@ paths:
       operationId: getCountries
       description: 'All countries where Econt Express operates'
       security:
-        - BasicAuth: []
+        - {}
       tags:
         - Nomenclatures
       requestBody:

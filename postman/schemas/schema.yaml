@@ -69,7 +69,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/GetOfficesRequest'
+              $ref: '#/components/schemas/GetOfficeRequest'
             examples:
               bulgaria:
                 summary: Get all offices in Bulgaria
@@ -489,7 +489,7 @@ components:
           items:
             $ref: '#/components/schemas/City'
 
-    GetOfficeRequest:
+    GetOfficesRequest:
       type: object
       properties:
         countryCode:

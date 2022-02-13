@@ -1,0 +1,107 @@
+<?php
+
+namespace {{invokerPackage}};
+
+use {{invokerPackage}}\Auth\AuthenticationInterface;
+use {{invokerPackage}}\Auth\HttpBasic;
+use GuzzleHttp\Exception\GuzzleException;
+
+class ApiClient
+{
+    private \GuzzleHttp\ClientInterface $client;
+    private HeaderSelector $headerSelector;
+
+    /**
+     * @var array<string, AuthenticationInterface>
+     */
+    private array $auths = [];
+    /**
+     * @var array
+     */
+    private array $apis = [];
+
+    public function __construct(\GuzzleHttp\ClientInterface $client, HeaderSelector $headerSelector)
+    {
+        $this->client = $client;
+        $this->headerSelector = $headerSelector;
+
+        {{#hasAuthMethods}}
+        // Setup auths{{#authMethods}}{{#isBasic}}
+        $this->auths['{{name}}'] = new HttpBasic();{{/isBasic}}{{/authMethods}}
+        {{/hasAuthMethods}}
+    }
+
+    public function getAuth(string $id): AuthenticationInterface
+    {
+        return $this->auths[$id];
+    }
+
+    public function getApi(string $className)
+    {
+        if (!isset($this->apis[$className])) {
+            $this->apis[$className] = new $className($this);
+        }
+
+        return $this->apis[$className];
+    }
+
+    /* public function getCities(string $countryCode)
+    {
+        $request = (new Request('POST', 'Nomenclatures/NomenclaturesService.getCities.json', [], json_encode([
+            'countryCode' => $countryCode
+        ])))
+            ->setSupportedAuthIds(['BasicAuth'])
+            ->setResponseTransformer([ApiClient::class, 'getCitiesResponse']);
+
+
+        return $this->sendRequest($request);
+    }
+
+    private function getCitiesResponse(\GuzzleHttp\Psr7\Response $response)
+    {
+        return 'haha';
+    } */
+
+    /**
+     * @param Request $request
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     *
+     * @throws ApiException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendRequest(Request $request): \Psr\Http\Message\ResponseInterface
+    {
+        $auth = $this->getRequestAuth($request);
+
+        if ($auth) {
+            $request = $auth->getAuthenticatedRequest($request);
+        }
+
+        try {
+            return $this->client->send($request);
+        } catch (GuzzleException $e) {
+            throw new ApiException($e->getMessage(), $e->getCode());
+        }
+    }
+
+    protected function getRequestAuth(Request $request): ?AuthenticationInterface
+    {
+        $initializedRequestAuths = array_intersect(array_keys($this->auths), $request->getSupportedAuthIds());
+
+        if (!count($initializedRequestAuths)) {
+            return null;
+        }
+
+        return $this->getAuth($initializedRequestAuths[0]);
+    }
+
+    /**
+     * @return HeaderSelector
+     */
+    public function getHeaderSelector(): HeaderSelector
+    {
+        return $this->headerSelector;
+    }
+
+}

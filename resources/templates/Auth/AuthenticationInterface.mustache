@@ -1,0 +1,10 @@
+<?php
+
+namespace {{invokerPackage}}\Auth;
+
+use {{invokerPackage}}\Request;
+
+interface AuthenticationInterface
+{
+    public function getAuthenticatedRequest(Request $request): Request;
+}

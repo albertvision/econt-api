@@ -6,9 +6,9 @@ externalDocs:
   url: https://ee.econt.com/services
   description: Official documentation
 servers:
-  - url: 'https://demo.econt.com/ee/services'
+  - url: 'https://demo.econt.com/ee/services/'
     description: "Demo"
-  - url: 'https://ee.econt.com/services'
+  - url: 'https://ee.econt.com/services/'
     description: "Production"
 paths:
   /Nomenclatures/NomenclaturesService.getCountries.json:
@@ -18,7 +18,7 @@ paths:
       security:
         - {}
       tags:
-        - Nomenclatures
+        - Nomenclaturess
       requestBody:
         content:
           'application/json':
@@ -45,7 +45,7 @@ paths:
         - Nomenclatures
       requestBody:
         content:
-          'application/json':
+          'multipart/form-data,application/json':
             schema:
               $ref: '#/components/schemas/GetCitiesRequest'
             examples:
@@ -53,8 +53,7 @@ paths:
                 summary: Get all cities in Bulgaria
                 value:
                   countryCode: 'BGR'
-            example:
-              countryCode: 'BGR'
+            x-as-method-params: true
       responses:
         '200':
           description: 'Success'
@@ -138,7 +137,7 @@ paths:
         - Nomenclatures
       requestBody:
         content:
-          'application/json':
+          'multipart/form-data,application/json':
             schema:
               $ref: '#/components/schemas/GetQuartersRequest'
             examples:
@@ -498,6 +497,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/City'
+      x-return-key: cities
 
     GetOfficesRequest:
       type: object
@@ -536,7 +536,7 @@ components:
     GetQuartersResponse:
       type: object
       properties:
-        streets:
+        quarters:
           type: array
           items:
             $ref: '#/components/schemas/Quarter'
@@ -566,6 +566,8 @@ components:
 security:
   - BasicAuth: [ ]
 tags:
+  - name: Nomenclaturess
+    description: Anything that is related to names is likely to be here. That includes countries, cities, offices, streets, addresses, neighbourhoods.
   - name: Nomenclatures
     description: Anything that is related to names is likely to be here. That includes countries, cities, offices, streets, addresses, neighbourhoods.
       

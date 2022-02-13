@@ -1,0 +1,58 @@
+<?php
+
+namespace {{invokerPackage}};
+
+class Request extends \GuzzleHttp\Psr7\Request
+{
+    /**
+     * @var string[]
+     */
+    private array $supportedAuthIds = [];
+
+    /**
+     * @var callable
+     */
+    private $responseTransformer;
+
+    public function __construct(string $method, $uri, array $headers = [], $body = null, string $version = '1.1')
+    {
+        parent::__construct($method, ltrim($uri, '/'), $headers, $body, $version);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSupportedAuthIds(): array
+    {
+        return $this->supportedAuthIds;
+    }
+
+    /**
+     * @param string[] $supportedAuthIds
+     * @return Request
+     */
+    public function setSupportedAuthIds(array $supportedAuthIds): Request
+    {
+        $this->supportedAuthIds = $supportedAuthIds;
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getResponseTransformer()
+    {
+        return $this->responseTransformer;
+    }
+
+    /**
+     * @param callable $responseTransformer
+     * @return Request
+     */
+    public function setResponseTransformer($responseTransformer): Request
+    {
+        $this->responseTransformer = $responseTransformer;
+        return $this;
+    }
+
+}

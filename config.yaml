@@ -1,0 +1,24 @@
+generator: php
+output: dist
+gitUserId: albertvision
+gitRepoId: econt-api
+invokerPackage: AlbertVision\Econt
+variableNamingConvention: camelCase
+artifactVersion: 1.2.3
+templateDir: resources/templates
+httpUserAgent: AlbertVision-Econt-Client
+additionalProperties:
+  apiNameSuffix: ""
+files:
+  ApiClient.mustache:
+    folder: 'lib'
+    destinationFilename: ApiClient.php
+  Request.mustache:
+    folder: 'lib'
+    destinationFilename: Request.php
+  'Auth/AuthenticationInterface.mustache':
+    folder: 'lib/Auth'
+    destinationFilename: AuthenticationInterface.php
+  'Auth/HttpBasic.mustache':
+    folder: 'lib/Auth'
+    destinationFilename: HttpBasic.php
